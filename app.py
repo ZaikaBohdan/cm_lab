@@ -26,7 +26,7 @@ st.write("# Когнітивне моделювання")
 with st.sidebar.header('1. Виберіть .xlsx файл'):
     uploaded_file = st.sidebar.file_uploader("Виберіть .xlsx файл з когнітивною картою", type=["xlsx"])
     st.sidebar.markdown("""
-        [Приклад необхідного файлу](https://github.com/ZaikaBohdan/datasetsforlabs/blob/main/sa_lab6_raw_input.xlsx?raw=true)
+        [Приклад необхідного файлу](https://github.com/ZaikaBohdan/datasetsforlabs/raw/main/cm_input_example.xlsx?raw=true)
     """)
 
 if uploaded_file is not None:
