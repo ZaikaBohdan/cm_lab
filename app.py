@@ -86,7 +86,10 @@ if uploaded_file is not None:
 
     if imp_mod_button:
         st.write("## Імпульсне моделювання")
-        impulse_model(t, V, P, cogn_map)
+        st.write("### Графік")
+        imp_res = impulse_model(t, V, P, cogn_map)
+        st.write("### Таблиця")
+        st.dataframe(imp_res)
 
 else:
     st.info('Виберіть .xlsx файл з вхідними даними у боковому вікні зліва.')

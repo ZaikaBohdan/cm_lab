@@ -83,12 +83,12 @@ def impulse_model(t, V, P, df):
         x_new = x_i[-1] + np.matmul(x_i[-1] - x_i[-2], A)
         x_i.append(x_new)
     
-    source = pd.DataFrame(
+    imp_res = pd.DataFrame(
         x_i,
         index = [i-1 for i in range(len(x_i))],
         columns=[f'e{i+1:02}' for i in range(A.shape[0])]
         )
-    source = source.reset_index().melt('index', var_name='category', value_name='y')
+    source = imp_res.reset_index().melt('index', var_name='category', value_name='y')
 
     line_chart = alt.Chart(source).mark_line().encode(
         alt.X('index', title='t'),
@@ -98,3 +98,5 @@ def impulse_model(t, V, P, df):
     ).properties(title=title)
 
     st.altair_chart(line_chart, use_container_width=True)
+
+    return imp_res
