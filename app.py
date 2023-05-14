@@ -6,12 +6,22 @@ import pandas as pd
 from cm_func import *
 
 st.set_page_config(
-    page_title='СА Лаб 6: Когнітивне та імпульсне моделювання',
+    page_title='Когнітивне моделювання',
     page_icon='🎓',
     layout='wide'
 )
 
-st.write("# СА Лаб 6: Когнітивне та імпульсне моделювання")
+# to remove +/- from number input widgets
+st.markdown("""
+    <style>
+        button.step-up {display: none;}
+        button.step-down {display: none;}
+        div[data-baseweb] {border-radius: 4px;}
+    </style>""",
+    unsafe_allow_html=True
+)
+
+st.write("# Когнітивне моделювання")
 
 with st.sidebar.header('1. Виберіть .xlsx файл'):
     uploaded_file = st.sidebar.file_uploader("Виберіть .xlsx файл з когнітивною картою", type=["xlsx"])
@@ -62,20 +72,21 @@ if uploaded_file is not None:
     
     # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Імпульсивне моделювання <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     with st.sidebar.header('2. Параметри імпульсного моделювання'):
-        Q = np.zeros(8)
-        cols = st.sidebar.columns(2)
-        t = st.sidebar.number_input('N ітерацій', min_value=0, value=5)
-        for i in range(8):
-            Q[i] = cols[i%2].selectbox(
-                f'Q({i})',
-                [-1, 0, 1],
-                1
-            )
+        st.sidebar.markdown("#### 2.1. Початковий стан")
+        V = np.zeros(cogn_map.shape[0])
+        v_cols = st.sidebar.columns(2)
+        st.sidebar.markdown("#### 2.2. Початковий імпульс")
+        P = np.zeros(cogn_map.shape[0])
+        p_cols = st.sidebar.columns(2)
+        t = st.sidebar.number_input('Кількість ітерацій', min_value=1, value=5)
+        for i in range(cogn_map.shape[0]):
+            V[i] = v_cols[i%2].number_input(f'v{i+1}', min_value=-1.0, max_value=1.0, value=0.0)
+            P[i] = p_cols[i%2].number_input(f'p{i+1}', min_value=-1.0, max_value=1.0, value=0.0)
         imp_mod_button = st.sidebar.button('Виконати')
 
     if imp_mod_button:
         st.write("## Імпульсне моделювання")
-        impulse_model(t, Q, cogn_map)
+        impulse_model(t, V, P, cogn_map)
 
 else:
     st.info('Виберіть .xlsx файл з вхідними даними у боковому вікні зліва.')

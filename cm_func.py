@@ -74,26 +74,27 @@ def find_even_cycles(df, G):
 def check_structural_stability(df, G):
     return find_even_cycles(df, G)[0].shape[0] == 0
 
-def impulse_model(t, Q, df):
-    title = f'Q = {list(Q)}'
+def impulse_model(t, V, P, df):
+    title = f'P = {list(P)}'
 
     A = np.array(df)
-    x_i = [np.zeros(A.shape[0]), np.zeros(A.shape[0])]
+    x_i = [V, V+P]
     for _ in range(t):
-        x_new = x_i[-1] + np.matmul(A, x_i[-1] - x_i[-2]) + Q
+        x_new = x_i[-1] + np.matmul(x_i[-1] - x_i[-2], A)
         x_i.append(x_new)
-        Q = np.zeros(A.shape[0])
     
     source = pd.DataFrame(
         x_i,
-        columns=[f'e{i}' for i in range(A.shape[0])]
+        index = [i-1 for i in range(len(x_i))],
+        columns=[f'e{i+1:02}' for i in range(A.shape[0])]
         )
     source = source.reset_index().melt('index', var_name='category', value_name='y')
 
     line_chart = alt.Chart(source).mark_line().encode(
         alt.X('index', title='t'),
         alt.Y('y', title='x(t)'),
-        color='category:N'
+        color='category:N',
+        tooltip=['category', 'y']
     ).properties(title=title)
 
     st.altair_chart(line_chart, use_container_width=True)
