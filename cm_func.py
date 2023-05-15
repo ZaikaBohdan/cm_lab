@@ -75,7 +75,7 @@ def check_structural_stability(df, G):
     return find_even_cycles(df, G)[0].shape[0] == 0
 
 def impulse_model(t, V, P, df):
-    title = f'P = {list(P)}'
+    title = f'V = {list(V)}\nP = {list(P)}'
 
     A = np.array(df)
     x_i = [V, V+P]
